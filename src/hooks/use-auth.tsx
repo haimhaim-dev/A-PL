@@ -152,6 +152,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+
+  
+
   // 퀴즈 목록 조회
   const refreshQuizzes = async () => {
     if (!user) return
