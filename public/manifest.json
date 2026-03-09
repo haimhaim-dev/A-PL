@@ -1,0 +1,10 @@
+{
+  "name": "에이쁠 - AI 퀴즈 생성기",
+  "short_name": "에이쁠",
+  "description": "AI가 PDF에서 자동으로 퀴즈를 생성해주는 서비스",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "icons": []
+}

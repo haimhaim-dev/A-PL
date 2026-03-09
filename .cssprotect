@@ -1,0 +1,13 @@
+# CSS 보호 설정 파일
+# 이 프로젝트의 CSS 파일들은 보호되어 있습니다.
+
+PROTECTED_FILES=app/globals.css,app/layout.tsx,tailwind.config.ts
+BACKUP_SUFFIX=.backup
+AUTO_RESTORE=true
+
+# 사용법:
+# npm run css:restore - 즉시 복구
+# npm run css:protect - 실시간 감시 시작
+
+# 경고: CSS 파일을 직접 수정하지 마세요!
+# 모든 스타일 변경은 백업 파일을 통해 이루어져야 합니다.

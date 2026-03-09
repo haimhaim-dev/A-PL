@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+
+# Development
+.env.local
+*.log
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation (불필요한 MD 파일들)
+*.md
+!README.md
+!current_status.md
+!DEPLOYMENT_GUIDE.md
+!SUPABASE_QUICKSTART.md
+
+# Testing
+coverage/
+.nyc_output/

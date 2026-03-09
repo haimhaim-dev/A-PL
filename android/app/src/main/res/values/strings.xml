@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">a-pl</string>
+    <string name="title_activity_main">a-pl</string>
+    <string name="package_name">com.haimhaim.APL</string>
+    <string name="custom_url_scheme">com.haimhaim.APL</string>
+</resources>

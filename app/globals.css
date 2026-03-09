@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🛡️ 최우선 글로벌 리셋 - 하이드레이션 안전 */
+html, body, #__next, #root, [data-nextjs-scroll-focus-boundary] {
+  background-color: #020617 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 모든 요소에 다크 테마 강제 적용 */
+* {
+  box-sizing: border-box !important;
+}
+
+div, main, section, article, aside, header, footer, nav, button {
+  color: inherit !important;
+}
+
+/* Next.js 하이드레이션 보호 */
+#__next {
+  background-color: #020617 !important;
+  min-height: 100vh !important;
+}
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --radius: 1rem;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  
+  html {
+    @apply scroll-smooth;
+    height: 100% !important;
+    background-color: #020617 !important;
+    color: #ffffff !important;
+  }
+  
+  body {
+    @apply bg-slate-950 text-white antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    min-height: 100vh !important;
+    background-color: #020617 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* 기본 요소들 스타일 */
+  h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+  }
+  
+  p {
+    color: inherit;
+  }
+  
+  button {
+    font-family: inherit;
+    color: inherit;
+  }
+  
+  /* 커스텀 스크롤바 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-800 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-700;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* KaTeX 커스텀 스타일 */
+@layer components {
+  .katex-container {
+    @apply inline-block;
+  }
+  
+  .katex-container .katex {
+    @apply text-white;
+  }
+  
+  .katex-container .katex .mord,
+  .katex-container .katex .mbin,
+  .katex-container .katex .mrel,
+  .katex-container .katex .mop,
+  .katex-container .katex .mpunct {
+    @apply text-blue-300;
+  }
+  
+  .katex-container .katex .mfrac .frac-line {
+    @apply border-blue-400;
+  }
+  
+  .katex-container .katex .sqrt .sqrt-line {
+    @apply border-blue-400;
+  }
+  
+  /* 다크 테마에 맞는 수식 색상 */
+  .katex-container .katex .mord.text {
+    @apply text-slate-300;
+  }
+
+  /* AI 자동 모드 glow 효과 */
+  .ai-auto-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
