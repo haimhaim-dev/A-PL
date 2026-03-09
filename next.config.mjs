@@ -3,6 +3,11 @@ const nextConfig = {
   // output: 'export', // 동적 경로와 클라이언트 컴포넌트 사용을 위해 비활성화
   reactStrictMode: true,
   
+  // 환경 변수 설정
+  env: {
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000',
+  },
+  
   // 이미지 최적화 설정
   images: {
     domains: ['lh3.googleusercontent.com'], // Google 프로필 이미지
@@ -24,16 +29,7 @@ const nextConfig = {
 
 
 
-  // Webpack 설정 (Canvas 라이브러리 호환성)
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push({
-        canvas: 'commonjs canvas'
-      });
-    }
-    return config;
-  }
+  // Canvas 제거: PDF→이미지는 클라이언트(브라우저 Canvas)에서 수행, 서버는 OCR만 담당
 };
 
 export default nextConfig;

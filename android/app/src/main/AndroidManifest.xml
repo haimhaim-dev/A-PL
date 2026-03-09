@@ -36,6 +36,10 @@
     </application>
 
     <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 푸시 알림 (FCM): 부팅 후 알림 수신, 진동 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Android 13+ 알림 권한 (런타임 요청) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { validatePDFFile, formatFileSize } from "@/lib/pdf-utils";
+import { getPDFPageCount } from "@/lib/pdf-to-image-client";
 import { extractPDFWithOCR, estimateOCRCost, getErrorMessage } from "@/lib/api-client";
 import { isAPIError } from "@/lib/error-handler";
 import { useToast } from "@/hooks/use-toast";
@@ -63,21 +64,23 @@ export function PDFOCRUploader({ onOCRComplete, onError }: PDFOCRUploaderProps) 
     setErrorMessage("");
     setResults(null);
 
-    // 비용 예상 요청
+    // 비용 예상 요청 (실제 PDF 페이지 수 사용)
     try {
-      // TODO: PDF 페이지 수 계산 (여기서는 임시로 1페이지로 가정)
-      const pageCount = 1;
+      const pageCount = await getPDFPageCount(selectedFile);
       const data = await estimateOCRCost(pageCount);
-      
+
       setEstimate(data.estimate);
       setUserPoints(data.currentPoints);
       setState("idle");
-      
-      showInfo("비용 예상 완료", `${pageCount}페이지 처리에 ${data.estimate.requiredPoints}P가 필요합니다.`);
+
+      showInfo(
+        "비용 예상 완료",
+        `${pageCount}페이지 처리에 ${data.estimate.requiredPoints}P가 필요합니다.`
+      );
     } catch (error) {
       console.error("비용 예상 실패:", error);
       setState("idle");
-      
+
       const errorMsg = getErrorMessage(error);
       showWarning("비용 예상 실패", errorMsg);
     }

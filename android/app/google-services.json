@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "999213389579",
+    "project_id": "a-pl-98710",
+    "storage_bucket": "a-pl-98710.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999213389579:android:6ef387def87298e05eb40e",
+        "android_client_info": {
+          "package_name": "com.haimhaim.apl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzhCXk7XmHoSdSH2IYDbFnOh2aWR2wItA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

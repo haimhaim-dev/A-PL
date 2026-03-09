@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 앱 테마 -->
+    <color name="colorPrimary">#1e293b</color>
+    <color name="colorPrimaryDark">#0f172a</color>
+    <color name="colorAccent">#3b82f6</color>
+    <!-- 스플래시 화면: 다크 배경 (로딩 시 하얀 화면 방지) -->
+    <color name="splash_background">#0f172a</color>
+</resources>

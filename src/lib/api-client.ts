@@ -2,6 +2,7 @@ import type { PDFExtractResult, PDFExtractionError } from "@/types/pdf";
 import type { OCRResult } from "@/types/ocr";
 import { parseAPIError, parseNetworkError, retryWithBackoff, isAPIError, logError } from "@/lib/error-handler";
 import type { APIError } from "@/types/error";
+import { getPDFPageCount, renderPagesToImages } from "@/lib/pdf-to-image-client";
 
 /**
  * API 클라이언트 유틸리티 (에러 핸들링 강화)
@@ -79,18 +80,34 @@ export async function extractPDFWithOCR(
 ): Promise<{ results: OCRResult[]; summary: any }> {
   try {
     return await retryWithBackoff(async () => {
-      const formData = new FormData();
-      formData.append("file", file);
+      // 클라이언트에서 PDF → 이미지 변환 (브라우저 Canvas, 서버 Canvas 불필요)
+      const pageCount = await getPDFPageCount(file);
+      const pageNumbers =
+        (options.pageNumbers?.length ?? 0) > 0
+          ? options.pageNumbers!
+          : Array.from({ length: pageCount }, (_, i) => i + 1);
+      const qualityNum =
+        options.quality === "high" ? 0.85 : options.quality === "low" ? 0.6 : 0.7;
+      const pageImageResults = await renderPagesToImages(
+        file,
+        pageNumbers.slice(0, 50),
+        qualityNum,
+        50
+      );
 
-      if (options.quality) {
-        formData.append("quality", options.quality);
-      }
-      if (options.enhanceFormulas !== undefined) {
-        formData.append("enhanceFormulas", options.enhanceFormulas.toString());
-      }
-      if (options.pageNumbers) {
-        formData.append("pageNumbers", JSON.stringify(options.pageNumbers));
-      }
+      const pageImages = pageImageResults.map((r) => ({
+        pageNumber: r.pageNumber,
+        base64Image: r.base64Image,
+        mimeType: r.mimeType,
+        width: r.width,
+        height: r.height
+      }));
+
+      const formData = new FormData();
+      formData.append("pageImages", JSON.stringify(pageImages));
+      formData.append("fileName", file.name);
+      formData.append("quality", options.quality ?? "medium");
+      formData.append("enhanceFormulas", (options.enhanceFormulas !== false).toString());
 
       const response = await fetch("/api/pdf-ocr", {
         method: "POST",

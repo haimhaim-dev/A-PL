@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateFileOnServer, validatePageNumbers } from "@/lib/server-validation";
 import {
-  renderPDFPageToImage,
-  renderPDFPagesToImages,
-  getScaleForQuality
+  clientImagesToPDFPageImages,
+  type ClientPageImage
 } from "@/lib/pdf-to-image";
 import { extractTextFromImage, isGeminiAvailable } from "@/lib/gemini-client";
 import { calculateOCRCost } from "@/lib/points-manager";
@@ -103,57 +101,67 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. FormData 파싱
+    // 5. FormData 파싱 (클라이언트가 브라우저에서 PDF→이미지 변환 후 전송)
     const formData = await request.formData();
-    const file = formData.get("file") as File | null;
-    const pageNumbersStr = formData.get("pageNumbers") as string | null;
+    const pageImagesStr = formData.get("pageImages") as string | null;
+    const fileName = (formData.get("fileName") as string) || "document.pdf";
     const quality = (formData.get("quality") as "low" | "medium" | "high") || "medium";
     const enhanceFormulas = formData.get("enhanceFormulas") !== "false";
 
-    // 6. 파일 검증
-    if (!file) {
+    // 6. 페이지 이미지 payload 검증
+    if (!pageImagesStr || typeof pageImagesStr !== "string") {
       return NextResponse.json<OCRError>(
-        { error: "파일이 제공되지 않았습니다.", code: "PDF_PROCESSING_ERROR" },
+        { error: "페이지 이미지가 제공되지 않았습니다.", code: "PDF_PROCESSING_ERROR" },
         { status: 400 }
       );
     }
 
-    // 7. 서버 사이드 파일 검증 (보안 강화)
-    const fileValidation = await validateFileOnServer(file);
-    if (!fileValidation.valid) {
+    let clientImages: ClientPageImage[];
+    try {
+      const parsed = JSON.parse(pageImagesStr) as unknown;
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        throw new Error("pageImages must be a non-empty array");
+      }
+      const maxPages = 50;
+      if (parsed.length > maxPages) {
+        return NextResponse.json<OCRError>(
+          {
+            error: `최대 ${maxPages}페이지만 처리할 수 있습니다.`,
+            code: "PDF_PROCESSING_ERROR"
+          },
+          { status: 400 }
+        );
+      }
+      clientImages = parsed as ClientPageImage[];
+      for (let i = 0; i < clientImages.length; i++) {
+        const img = clientImages[i];
+        if (
+          typeof img.pageNumber !== "number" ||
+          typeof img.base64Image !== "string" ||
+          typeof img.mimeType !== "string" ||
+          typeof img.width !== "number" ||
+          typeof img.height !== "number"
+        ) {
+          throw new Error(`Invalid page image at index ${i}`);
+        }
+      }
+    } catch (e) {
+      console.error("pageImages 파싱 실패:", e);
       return NextResponse.json<OCRError>(
         {
-          error: fileValidation.error!,
-          code: fileValidation.code || "PDF_PROCESSING_ERROR"
+          error: "페이지 이미지 형식이 올바르지 않습니다.",
+          code: "PDF_PROCESSING_ERROR",
+          details: e instanceof Error ? e.message : "Unknown error"
         },
         { status: 400 }
       );
     }
 
-    // 8. PDF를 Buffer로 변환
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
-
-    // 9. 페이지 번호 검증
-    const pageNumbers = pageNumbersStr ? JSON.parse(pageNumbersStr) : undefined;
-    if (pageNumbers) {
-      const pageValidation = validatePageNumbers(pageNumbers);
-      if (!pageValidation.valid) {
-        return NextResponse.json<OCRError>(
-          {
-            error: pageValidation.error!,
-            code: "INVALID_PAGE_NUMBER"
-          },
-          { status: 400 }
-        );
-      }
-    }
-
-    // 10. 비용 계산
-    const pageCount = pageNumbers ? pageNumbers.length : 1;
+    // 7. 비용 계산
+    const pageCount = clientImages.length;
     const requiredPoints = calculateOCRCost(pageCount);
 
-    // 11. 포인트 확인
+    // 8. 포인트 확인
     const userPoints = await getUserPoints(userId);
     if (userPoints.remaining_points < requiredPoints) {
       return NextResponse.json<OCRError>(
@@ -167,31 +175,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 12. 이미지 품질 설정
-    const scale = getScaleForQuality(quality);
+    // 9. 클라이언트 이미지 → 서버 OCR용 형식 변환 (Canvas 없음)
+    const pageImages = clientImagesToPDFPageImages(clientImages);
 
-    // 13. PDF 페이지를 이미지로 렌더링
-    let pageImages;
-    try {
-      if (pageNumbers && Array.isArray(pageNumbers)) {
-        pageImages = await renderPDFPagesToImages(pdfBuffer, pageNumbers, scale);
-      } else {
-        const firstPage = await renderPDFPageToImage(pdfBuffer, 1, scale);
-        pageImages = [firstPage];
-      }
-    } catch (error) {
-      console.error("PDF 페이지 렌더링 실패:", error);
-      return NextResponse.json<OCRError>(
-        {
-          error: "PDF 페이지를 이미지로 변환하는데 실패했습니다.",
-          code: "PAGE_RENDER_FAILED",
-          details: error instanceof Error ? error.message : "Unknown error"
-        },
-        { status: 500 }
-      );
-    }
-
-    // 14. OCR 수행
+    // 10. OCR 수행
     const ocrResults: OCRResult[] = [];
     let totalTokensUsed = 0;
 
@@ -221,7 +208,7 @@ export async function POST(request: NextRequest) {
         "pdf_ocr",
         `PDF OCR 처리 (${pageCount}페이지)`,
         {
-          fileName: file.name,
+          fileName,
           pageCount,
           tokensUsed: totalTokensUsed,
           quality,
