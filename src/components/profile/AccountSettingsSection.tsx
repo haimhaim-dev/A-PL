@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Settings } from "lucide-react";
+import { CreditCard, Settings, Info } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 
@@ -63,6 +63,19 @@ export function AccountSettingsSection() {
               className="text-xs border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               이용 내역
+            </Button>
+          </div>
+
+          {/* 모바일 전용: 앱 정보 */}
+          <div className="mt-4 pt-4 border-t border-slate-700/50 md:hidden">
+            <Button
+              onClick={() => router.push("/app-info")}
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+            >
+              <Info className="h-4 w-4" />
+              앱 정보
             </Button>
           </div>
         </div>

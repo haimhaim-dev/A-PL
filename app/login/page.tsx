@@ -142,21 +142,13 @@ export default function LoginPage() {
           </div>
         </Card>
 
-        {/* 보너스 안내 */}
+        {/* 첫 로그인 혜택 안내 */}
         <div className="relative overflow-hidden rounded-xl border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/5 p-5">
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-yellow-500/10 blur-2xl" />
-          <div className="relative space-y-2 text-center">
-            <div className="flex items-center justify-center gap-2">
-              <Sparkles className="h-5 w-5 text-yellow-400" />
-              <p className="text-sm font-bold text-yellow-400">
-                회원가입 축하 보너스!
-              </p>
-            </div>
-            <p className="text-base font-semibold text-white">
-              500 포인트 무료 지급
-            </p>
-            <p className="text-xs text-slate-400">
-              PDF OCR 50페이지 또는 문제 생성 10회 사용 가능
+          <div className="relative flex items-center justify-center gap-2 text-center">
+            <Sparkles className="h-5 w-5 shrink-0 text-yellow-400" />
+            <p className="text-base font-bold text-white">
+              첫 로그인 시 5회 생성 무료!
             </p>
           </div>
         </div>

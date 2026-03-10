@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { AppLogo } from "@/components/ui/app-logo";
 
 interface LogoBadgeProps {
   className?: string;
@@ -12,10 +13,7 @@ export function LogoBadge({ className }: LogoBadgeProps) {
         className
       )}
     >
-      <div className="relative flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-deep to-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/50">
-        <span className="relative z-10">A+</span>
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent" />
-      </div>
+      <AppLogo size={36} rounded="lg" />
       <div className="flex flex-col">
         <span className="text-sm font-semibold tracking-tight text-white">
           에이쁠

@@ -11,6 +11,7 @@ import {
   Menu,
   X 
 } from "lucide-react";
+import { AppLogo } from "@/components/ui/app-logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { LoginButton } from "@/components/auth/LoginButton";
@@ -152,9 +153,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               onClick={handleLogoClick}
               className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
-                <Sparkles className="h-4 w-4 text-white" />
-              </div>
+              <AppLogo size={32} rounded="lg" />
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                   에이쁠
@@ -214,9 +213,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             onClick={handleLogoClick}
             className="flex items-center gap-2 cursor-pointer touch-target"
           >
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg flex-shrink-0">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
+            <AppLogo size={32} rounded="lg" className="flex-shrink-0" />
             <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               에이쁠
             </h1>
