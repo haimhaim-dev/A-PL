@@ -11,13 +11,14 @@ export async function updateSession(request: NextRequest) {
 
   const envCheck = checkSupabaseEnv();
   
-  if (!envCheck.isValid) {
+  if (!envCheck.isValid || !envCheck.url || !envCheck.anonKey) {
     console.error("🚨 [Middleware] Supabase 환경변수 누락!");
     logEnvStatus();
     return response;
   }
 
-  const { url: supabaseUrl, anonKey: supabaseAnonKey } = envCheck;
+  const supabaseUrl = envCheck.url;
+  const supabaseAnonKey = envCheck.anonKey;
 
   const supabase = createServerClient(
     supabaseUrl,
