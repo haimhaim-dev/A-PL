@@ -380,14 +380,14 @@ export async function POST(request: NextRequest) {
 
       if (insertError) {
         if (insertError.code === "42703") {
-          console.warn("document_preset 컬럼 없음, fallback 시도");
-          const { document_preset, processed_content, table_references, ...fallbackData } = quizInsert;
+          console.warn("Quiz 컬럼 불일치, fallback 시도 (table_references 제외)");
+          const { table_references: _tr, ...fallbackData } = quizInsert;
           const { error: fallbackError } = await supabase
             .from("Quiz")
             .insert(fallbackData);
-          
+
           if (fallbackError) throw fallbackError;
-          console.log('✅ 퀴즈 데이터 저장 완료 (fallback 모드)');
+          console.log("✅ 퀴즈 데이터 저장 완료 (fallback 모드)");
         } else {
           throw insertError;
         }

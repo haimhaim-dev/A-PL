@@ -32,19 +32,42 @@ export default function LoginPage() {
     showInfo("구글 로그인", "구글 로그인 페이지로 이동합니다...");
 
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/`,
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent"
-          }
-        }
-      });
+      const isApp = typeof window !== "undefined" && (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
 
-      if (error) {
-        throw error;
+      if (isApp) {
+        // 앱: 딥링크 기반 PKCE — 브라우저에서 로그인 후 appl://auth/callback 으로 돌아오면 앱이 열림
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            skipBrowserRedirect: true,
+            redirectTo: "appl://auth/callback",
+            queryParams: {
+              access_type: "offline",
+              prompt: "consent"
+            }
+          }
+        });
+
+        if (error) throw error;
+        if (data?.url) {
+          const { Browser } = await import("@capacitor/browser");
+          await Browser.open({ url: data.url });
+        }
+        // 로딩 유지 — 브라우저에서 돌아오면 app-callback 페이지에서 처리
+      } else {
+        // 웹: 기존 플로우
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback?next=/`,
+            queryParams: {
+              access_type: "offline",
+              prompt: "consent"
+            }
+          }
+        });
+
+        if (error) throw error;
       }
     } catch (error) {
       console.error("❌ 구글 로그인 에러:", error);
