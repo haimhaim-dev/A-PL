@@ -29,7 +29,7 @@ export function AppLogo({ size = 40, rounded = "lg", className }: AppLogoProps) 
       style={{ width: px, height: px }}
     >
       <Image
-        src="/icons/Icon.svg"
+        src="/icons/Icon.png"
         alt="에이쁠"
         width={px}
         height={px}
