@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface AppLogoProps {
   /** 아이콘 크기 (정사각 영역 기준) */
@@ -27,12 +28,13 @@ export function AppLogo({ size = 40, rounded = "lg", className }: AppLogoProps) 
       )}
       style={{ width: px, height: px }}
     >
-      <img
+      <Image
         src="/icons/Icon.svg"
         alt="에이쁠"
         width={px}
         height={px}
         className="h-full w-full object-contain object-center"
+        priority
       />
     </span>
   );
