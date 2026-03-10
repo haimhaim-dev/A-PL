@@ -207,74 +207,75 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </aside>
 
-      {/* Mobile Header */}
-      <div className="md:hidden">
-        <div className="flex items-center justify-between h-16 px-4 bg-slate-900 border-b border-slate-800">
+      {/* Mobile Header (고정 + safe-area) */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 safe-top bg-slate-900 border-b border-slate-800">
+        <div className="flex items-center justify-between h-14 min-h-[44px] px-4">
           <div
             onClick={handleLogoClick}
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2 cursor-pointer touch-target"
           >
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg flex-shrink-0">
               <Sparkles className="h-4 w-4 text-white" />
             </div>
             <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               에이쁠
             </h1>
           </div>
-          
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-slate-300 hover:text-white"
+            className="h-11 w-11 touch-target text-slate-300 hover:text-white shrink-0"
           >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="absolute inset-x-0 top-16 z-50 bg-slate-900 border-b border-slate-800 shadow-lg">
-            <nav className="px-4 py-2 space-y-1">
+      {/* Mobile Menu: 풀스크린 오버레이 + 터치 친화 메뉴 */}
+      {isMobileMenuOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-hidden
+          />
+          <div className="md:hidden fixed inset-0 top-14 z-50 flex flex-col bg-slate-900 safe-bottom">
+            <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeMenuItem === item.id;
-                
                 return (
                   <div
                     key={item.id}
                     onClick={() => handleMenuClick(item.href)}
                     className={cn(
-                      "group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer",
+                      "flex items-center min-h-[48px] touch-target w-full px-4 py-3 text-base font-medium rounded-xl transition-all cursor-pointer",
                       isActive
                         ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30"
-                        : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                        : "text-slate-300 active:bg-slate-800/50"
                     )}
                   >
                     <Icon
-                      className={cn(
-                        "mr-3 h-5 w-5",
-                        isActive ? "text-purple-400" : "text-slate-400"
-                      )}
+                      className={cn("mr-4 h-5 w-5 shrink-0", isActive ? "text-purple-400" : "text-slate-400")}
                     />
                     <span>{item.label}</span>
                   </div>
                 );
               })}
             </nav>
+            <div className="flex-shrink-0 p-4 border-t border-slate-800 safe-bottom">
+              <UserInfo />
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
 
-      {/* Main Content */}
+      {/* Main Content (모바일: 고정 헤더 높이만큼 상단 패딩) */}
       <main className={cn(
-        "flex-1 overflow-hidden",
-        "md:ml-64", // Desktop: margin-left for sidebar
-        "flex flex-col" // Mobile: full width
+        "flex-1 overflow-hidden flex flex-col",
+        "pt-14 md:pt-0", // 모바일 헤더 높이
+        "md:ml-64"
       )}>
         <div className="flex-1 overflow-y-auto">
           {children}

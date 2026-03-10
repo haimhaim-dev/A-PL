@@ -40,7 +40,7 @@ export default function LibraryPage() {
     return (
       <MainLayout>
         <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-          <Card className="w-full max-w-md">
+          <Card className="w-full max-w-md mx-4 sm:mx-auto">
             <CardHeader className="text-center">
               <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg mx-auto mb-4">
                 <BookOpen className="h-8 w-8 text-white" />
@@ -73,9 +73,9 @@ export default function LibraryPage() {
   if (isAuthLoading || currentIsLoading) {
     return (
       <MainLayout>
-        <div className="container mx-auto max-w-6xl py-8 px-4">
+        <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
         {/* 헤더 섹션 - 로딩 상태 */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
               <BookOpen className="h-6 w-6 text-white" />
@@ -111,19 +111,19 @@ export default function LibraryPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto max-w-6xl py-8 px-4">
+      <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
       {/* 헤더 섹션 */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
-            <BookOpen className="h-6 w-6 text-white" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
+            <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+          <div className="min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
               라이브러리
             </h1>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-lg text-slate-300">
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-sm sm:text-lg text-slate-300 truncate">
                 총 <span className="font-bold text-emerald-400">{totalQuizCount}</span>개의 문제집이 소장 중입니다
               </span>
             </div>
@@ -131,7 +131,7 @@ export default function LibraryPage() {
         </div>
         
         {/* 버튼 그룹 */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Button
             onClick={() => router.push("/library/export-history")}
             variant="outline"

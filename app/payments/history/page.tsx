@@ -123,22 +123,20 @@ export default function PointHistoryPage() {
   return (
     <MainLayout>
       <div className="min-h-screen bg-slate-950 text-white">
-        <div className="container mx-auto max-w-6xl py-8 px-4">
+        <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
           {/* 헤더 */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={() => router.back()}
-                variant="ghost"
-                size="sm"
-                className="text-slate-400 hover:text-white hover:bg-slate-800"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                돌아가기
-              </Button>
-            </div>
-            <div className="text-right">
-              <h1 className="text-2xl font-bold text-white">포인트 사용 내역</h1>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+            <Button
+              onClick={() => router.back()}
+              variant="ghost"
+              size="sm"
+              className="text-slate-400 hover:text-white hover:bg-slate-800 self-start touch-target min-h-[44px]"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              돌아가기
+            </Button>
+            <div className="text-left sm:text-right">
+              <h1 className="text-xl sm:text-2xl font-bold text-white">포인트 사용 내역</h1>
               <p className="text-sm text-slate-400 mt-1">충전 및 사용 기록을 확인하세요</p>
             </div>
           </div>
@@ -257,8 +255,9 @@ export default function PointHistoryPage() {
                       </Button>
                     </div>
                   ) : (
-                    // 데이터 테이블
-                    <Table>
+                    // 데이터 테이블 (모바일 가로 스크롤)
+                    <div className="mobile-table-wrap">
+                    <Table className="min-w-[600px]">
                       <TableHeader>
                         <TableRow className="border-slate-700 hover:bg-slate-800/50">
                           <TableHead className="text-slate-300">날짜</TableHead>
@@ -304,6 +303,7 @@ export default function PointHistoryPage() {
                         })}
                       </TableBody>
                     </Table>
+                    </div>
                   )}
                 </TabsContent>
               </Tabs>

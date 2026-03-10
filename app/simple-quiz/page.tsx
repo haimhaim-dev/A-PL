@@ -135,21 +135,21 @@ export default function SimpleQuizPage() {
     <MainLayout>
       <div className="min-h-screen bg-background text-foreground">
         {/* 데스크탑 2단 레이아웃 */}
-        <div className="container mx-auto max-w-6xl py-8 px-4 lg:grid lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-5 flex flex-col space-y-6">
+        <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8 lg:grid lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-5 flex flex-col space-y-4 sm:space-y-6">
             {/* 좌측: 파일 업로드 및 메인 콘텐츠 */}
             <Card className="w-full">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
+              <CardHeader className="space-y-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-start gap-3 sm:items-center">
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
                       <Sparkles className="h-5 w-5 text-white" />
                     </div>
-                    <div>
-                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                    <div className="min-w-0">
+                      <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                         나만의 시험 문제 만들기
                       </CardTitle>
-                      <CardDescription className="text-slate-300">
+                      <CardDescription className="text-slate-300 text-sm">
                         PDF를 업로드하면 AI가 자동으로 분석하여 맞춤형 문제를 생성해 드립니다.
                       </CardDescription>
                     </div>

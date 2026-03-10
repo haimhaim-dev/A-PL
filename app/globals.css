@@ -132,6 +132,40 @@ div, main, section, article, aside, header, footer, nav, button {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* 모바일 전용: safe-area (노치/홈 인디케이터 대응) */
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* 모바일 페이지 공통 패딩 (터치 친화적) */
+  .mobile-page {
+    @apply px-4 py-6 sm:px-6 md:py-8;
+    padding-left: max(1rem, env(safe-area-inset-left, 0));
+    padding-right: max(1rem, env(safe-area-inset-right, 0));
+  }
+
+  /* 터치 타겟 최소 44px (접근성) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 모바일 테이블 가로 스크롤 래퍼 */
+  .mobile-table-wrap {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+    padding-left: max(1rem, env(safe-area-inset-left, 0));
+    padding-right: max(1rem, env(safe-area-inset-right, 0));
+  }
 }
 
 /* KaTeX 커스텀 스타일 */

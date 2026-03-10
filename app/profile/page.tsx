@@ -69,7 +69,7 @@ export default function ProfilePage() {
     return (
       <MainLayout>
         <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-          <Card className="w-full max-w-md">
+          <Card className="w-full max-w-md mx-4 sm:mx-auto">
             <CardHeader className="text-center">
               <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg mx-auto mb-4">
                 <User className="h-8 w-8 text-white" />
@@ -101,7 +101,7 @@ export default function ProfilePage() {
   return (
     <MainLayout>
       <div className="min-h-screen bg-background text-foreground">
-        <div className="container mx-auto max-w-7xl py-6 px-4">
+        <div className="container mx-auto max-w-7xl mobile-page py-6">
           {/* 메인 그리드 레이아웃 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 왼쪽 컬럼 */}

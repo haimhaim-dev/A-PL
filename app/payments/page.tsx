@@ -13,34 +13,33 @@ export default function PaymentsPage() {
   return (
     <MainLayout>
       <div className="min-h-screen bg-background text-foreground">
-        <div className="container mx-auto max-w-4xl py-8 px-4">
+        <div className="container mx-auto max-w-4xl mobile-page py-6 sm:py-8">
           {/* 헤더 */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
               <Button
                 onClick={() => router.back()}
                 variant="ghost"
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 self-start touch-target min-h-[44px]"
               >
                 <ArrowLeft className="w-4 h-4" />
                 돌아가기
               </Button>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                   포인트 충전
                 </h1>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-muted-foreground mt-1 text-sm sm:text-base">
                   AI 퀴즈 생성을 위한 포인트를 충전하세요
                 </p>
               </div>
             </div>
             
-            {/* 내역 보기 버튼 */}
             <Button
               onClick={() => router.push("/payments/history")}
               variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full sm:w-auto touch-target min-h-[44px] justify-center"
             >
               <History className="w-4 h-4" />
               사용 내역
