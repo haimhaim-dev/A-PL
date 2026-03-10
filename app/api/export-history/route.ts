@@ -98,9 +98,9 @@ export async function POST(request: NextRequest) {
     const parseResult = ExportHistorySchema.safeParse(body);
 
     if (!parseResult.success) {
-      const firstError = parseResult.error.errors[0];
+      const firstIssue = parseResult.error.issues?.[0];
       return NextResponse.json(
-        { error: firstError?.message ?? "필수 정보가 누락되었습니다." },
+        { error: firstIssue?.message ?? "필수 정보가 누락되었습니다." },
         { status: 400 }
       );
     }

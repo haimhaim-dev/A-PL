@@ -112,7 +112,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           }}
         />
       </head>
-      <body className="min-h-screen bg-slate-950 text-white antialiased" style={{
+      <body
+        className="min-h-screen bg-slate-950 text-white antialiased safe-top safe-bottom"
+        style={{
         backgroundColor: '#020617',
         color: '#ffffff',
         margin: 0,

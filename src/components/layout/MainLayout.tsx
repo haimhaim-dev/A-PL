@@ -143,7 +143,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-slate-950">
+    <div className="flex min-h-screen bg-slate-950">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
         <div className="flex flex-col flex-1 min-h-0 bg-slate-900 border-r border-slate-800">
