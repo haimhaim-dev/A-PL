@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { checkSupabaseEnv, logEnvStatus } from "@/utils/env-check";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -8,15 +9,15 @@ export async function updateSession(request: NextRequest) {
     }
   });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn(
-      "[Middleware] Supabase URL/Key 없음 — 세션 검사 생략. Vercel 환경 변수 확인 후 재배포하세요."
-    );
+  const envCheck = checkSupabaseEnv();
+  
+  if (!envCheck.isValid) {
+    console.error("🚨 [Middleware] Supabase 환경변수 누락!");
+    logEnvStatus();
     return response;
   }
+
+  const { url: supabaseUrl, anonKey: supabaseAnonKey } = envCheck;
 
   const supabase = createServerClient(
     supabaseUrl,

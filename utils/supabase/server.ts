@@ -3,10 +3,18 @@ import { cookies } from 'next/headers'
 
 export function createClient() {
   const cookieStore = cookies()
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('🚨 [Server] Supabase 환경변수가 설정되지 않았습니다!');
+    throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
+  }
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {

@@ -18,7 +18,18 @@ export default function LoginPage() {
   const { showError, showInfo } = useToast();
   const { user } = useAuth();
   const router = useRouter();
-  const supabase = createClient();
+  
+  // Supabase 클라이언트 생성 시 환경변수 체크
+  let supabase;
+  try {
+    supabase = createClient();
+  } catch (error) {
+    // 환경변수가 없으면 설정 페이지로 리다이렉트
+    if (typeof window !== 'undefined') {
+      router.push('/setup-required');
+    }
+    return null;
+  }
 
   // 이미 로그인된 경우 메인 페이지로 리다이렉트
   React.useEffect(() => {
