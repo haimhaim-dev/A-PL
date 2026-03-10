@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">a-pl</string>
-    <string name="title_activity_main">a-pl</string>
+    <string name="app_name">에이쁠</string>
+    <string name="title_activity_main">에이쁠 - AI 퀴즈 생성기</string>
     <string name="package_name">com.haimhaim.APL</string>
     <string name="custom_url_scheme">com.haimhaim.APL</string>
+    <string name="app_description">AI가 PDF에서 자동으로 퀴즈를 생성해주는 대학생을 위한 스마트 학습 서비스</string>
 </resources>

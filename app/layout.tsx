@@ -48,7 +48,14 @@ export const metadata: Metadata = {
     description: "대학생을 위한 AI 시험 문제 생성 서비스"
   },
   icons: {
-    icon: "/favicon.ico"
+    icon: [
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/Icon.png", sizes: "any", type: "image/png" }
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+    ],
+    shortcut: "/favicon.png"
   }
 };
 

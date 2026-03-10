@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- 백업에서 제외할 파일들 -->
+    <exclude domain="sharedpref" path="secure_prefs.xml" />
+    <exclude domain="database" path="sensitive_data.db" />
+    <!-- 캐시 디렉토리는 자동으로 제외됨 -->
+</full-backup-content>
