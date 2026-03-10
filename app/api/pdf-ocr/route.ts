@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. 인증 확인 (Supabase Auth)
-    const user = await getCurrentUser();
-    if (!user) {
+    const { user, error: userError } = await getCurrentUser();
+    if (userError || !user) {
       return NextResponse.json<OCRError>(
         {
           error: "인증이 필요합니다. 로그인해 주세요.",
@@ -263,8 +263,8 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // 인증 확인
-    const user = await getCurrentUser();
-    if (!user) {
+    const { user, error: userError } = await getCurrentUser();
+    if (userError || !user) {
       return NextResponse.json<OCRError>(
         { error: "인증이 필요합니다.", code: "GEMINI_API_ERROR" },
         { status: 401 }

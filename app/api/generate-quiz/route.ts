@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. 인증 확인
-    const user = await getCurrentUser();
-    if (!user) {
+    const { user, error: userError } = await getCurrentUser();
+    if (userError || !user) {
       return NextResponse.json<GenerateQuizError>(
         { error: "로그인이 필요합니다.", code: "UNAUTHORIZED" },
         { status: 401 }
