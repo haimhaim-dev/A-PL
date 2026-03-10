@@ -6,11 +6,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useQuizGeneration } from "@/hooks/useQuizGeneration";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { Slider } from "@/components/ui/slider";
-import { Loader2, Settings, Info, Home, RotateCcw, Sparkles, Upload, CheckCircle } from "lucide-react";
+import { Loader2, Settings, Info, RotateCcw, Sparkles, Upload, CheckCircle } from "lucide-react";
 import { FileUploader } from "@/components/quiz-generator/FileUploader";
 import { AnalysisReport } from "@/components/quiz-generator/AnalysisReport";
 import { GenerationSettings } from "@/components/quiz-generator/GenerationSettings";
@@ -21,17 +18,14 @@ import { LoginButton } from "@/components/auth/LoginButton";
 
 export default function SimpleQuizPage() {
   const router = useRouter();
-  const { user, credits, isLoading: isAuthLoading, supabase, refreshCredits, userQuizzes, isUserQuizzesLoaded } = useAuth(); // useAuth에서 user, credits, isLoading, supabase 가져옴
+  const { user, credits, isLoading: isAuthLoading, supabase, refreshCredits, userQuizzes, isUserQuizzesLoaded } = useAuth();
   const {
-    // 상태
     state,
     file,
     isAnalyzing,
     isGenerating,
     aiAnalysisResult,
     settings,
-    
-    // useQuizGeneration에서 직접 반환하는 액션
     analyzeFile: analyzeFileHook,
     generateQuiz: generateQuizHook,
     resetState: resetStateFromHook,
@@ -43,18 +37,15 @@ export default function SimpleQuizPage() {
     if (user && supabase) {
       await analyzeFileHook(selectedFile, supabase, user.id);
     } else {
-      // 로그인되지 않은 사용자에게는 경고 메시지를 표시하거나 로그인 페이지로 리다이렉트
       alert("로그인 후 이용해주세요.");
-      router.push("/auth/signin"); // 예시: 로그인 페이지로 이동
+      router.push("/auth/signin");
     }
   }, [analyzeFileHook, user, supabase, router]);
 
   const handleGenerateQuiz = React.useCallback(async (quizTitle: string) => {
     if (user && supabase) {
       await generateQuizHook(quizTitle, supabase, user.id);
-      // 퀴즈 생성 후 크레딧 및 퀴즈 목록 새로고침
       refreshCredits();
-      // refreshQuizzes(); // TODO: 퀴즈 목록 새로고침 함수 추가 (AuthContext에)
     }
   }, [generateQuizHook, user, supabase, refreshCredits]);
 
@@ -63,7 +54,6 @@ export default function SimpleQuizPage() {
       await handleExportToText(quizId, supabase, user.id);
     }
   }, [user, supabase, handleExportToText]);
-
 
   const updateSettings = React.useCallback((newSettings: Partial<typeof settings>) => {
     updateSettingsHook(newSettings);
@@ -101,7 +91,7 @@ export default function SimpleQuizPage() {
 
     switch (state) {
       case "upload":
-        return <FileUploader onFileChange={handleFileChange} isAnalyzing={isAnalyzing} credits={credits} />; // credits 전달
+        return <FileUploader onFileChange={handleFileChange} isAnalyzing={isAnalyzing} credits={credits} />;
       case "analyzing":
         return (
           <div className="flex flex-col items-center justify-center p-8 space-y-4">
@@ -135,14 +125,11 @@ export default function SimpleQuizPage() {
     <MainLayout>
       <div className="min-h-screen bg-background text-foreground">
         <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
-          {/* 모바일 우선 레이아웃 */}
           <div className="space-y-6 lg:grid lg:grid-cols-12 lg:gap-8 lg:space-y-0">
             
-            {/* 메인 콘텐츠 (모바일에서 상단) */}
             <div className="lg:col-span-5 space-y-4 sm:space-y-6">
               <Card className="w-full">
                 <CardHeader className="space-y-3 sm:space-y-4">
-                  {/* 헤더 - 모바일 최적화 */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
@@ -158,7 +145,6 @@ export default function SimpleQuizPage() {
                       PDF를 업로드하면 AI가 자동으로 분석하여 맞춤형 문제를 생성해 드립니다.
                     </CardDescription>
                     
-                    {/* 처음부터 다시 버튼 - 모바일에서 풀 너비 */}
                     {state === "settings" && (
                       <Button
                         onClick={() => {
@@ -179,9 +165,7 @@ export default function SimpleQuizPage() {
               </Card>
             </div>
 
-            {/* 사이드 콘텐츠 (모바일에서 하단) */}
             <div className="lg:col-span-7 space-y-4 sm:space-y-6">
-              {/* 업로드 전 가이드 / 업로드 후 설정 */} 
               {state === "upload" ? (
                 <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white shadow-lg border-none rounded-2xl">
                   <CardHeader className="p-4 sm:p-6">
@@ -195,7 +179,6 @@ export default function SimpleQuizPage() {
                       <span className="text-xs leading-relaxed">업로드된 문서의 난이도와 핵심 키워드를 추출하여, 가장 효율적인 학습 순서로 문제를 재구성합니다.</span>
                     </div>
                     
-                    {/* 모바일에서 더 컴팩트한 스텝 */}
                     <div className="grid grid-cols-3 gap-3 text-center">
                       <div className="flex flex-col items-center space-y-2">
                         <Upload className="h-6 w-6 sm:h-8 sm:w-8 text-purple-300" />
@@ -214,7 +197,6 @@ export default function SimpleQuizPage() {
                 </Card>
               ) : (
                 <div className="space-y-4 sm:space-y-6">
-                  {/* 문제 생성 설정 */}
                   {state === "settings" && (
                     <Card className="w-full rounded-2xl">
                       <CardHeader className="p-4 sm:p-6">
@@ -233,7 +215,6 @@ export default function SimpleQuizPage() {
                     </Card>
                   )}
 
-                  {/* 최근 생성한 문제 */}
                   <Card className="w-full rounded-2xl">
                     <CardHeader className="p-4 sm:p-6">
                       <CardTitle className="text-lg sm:text-xl">최근 생성한 문제</CardTitle>
@@ -262,6 +243,7 @@ export default function SimpleQuizPage() {
                   </Card>
                 </div>
               )}
+            </div>
           </div>
         </div>
       </div>
