@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Settings, Info } from "lucide-react";
+import { CreditCard, Settings, Info, UserX } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
 
@@ -18,6 +18,10 @@ export function AccountSettingsSection() {
 
   const handlePointCharge = () => {
     router.push("/payments");
+  };
+
+  const handleAccountDeletion = () => {
+    router.push("/account/delete");
   };
 
   return (
@@ -76,6 +80,19 @@ export function AccountSettingsSection() {
             >
               <Info className="h-4 w-4" />
               앱 정보
+            </Button>
+          </div>
+
+          {/* 계정 탈퇴 */}
+          <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <Button
+              onClick={handleAccountDeletion}
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start gap-2 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+            >
+              <UserX className="h-4 w-4" />
+              계정 탈퇴
             </Button>
           </div>
         </div>
