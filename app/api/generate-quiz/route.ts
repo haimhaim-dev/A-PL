@@ -70,10 +70,10 @@ export async function POST(request: NextRequest) {
     const parseResult = GenerateQuizSchema.safeParse(body);
 
     if (!parseResult.success) {
-      const firstError = parseResult.error.errors[0];
+      const firstIssue = parseResult.error.issues?.[0];
       return NextResponse.json<GenerateQuizError>(
         {
-          error: firstError?.message ?? "파라미터가 올바르지 않습니다.",
+          error: firstIssue?.message ?? "파라미터가 올바르지 않습니다.",
           code: "INVALID_REQUEST",
         },
         { status: 400 }
