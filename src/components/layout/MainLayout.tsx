@@ -206,9 +206,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </aside>
 
-      {/* Mobile Header (고정 + safe-area) */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 safe-top bg-slate-900 border-b border-slate-800">
-        <div className="flex items-center justify-between h-14 min-h-[44px] px-4">
+      {/* Mobile Header (고정 + safe-area, 네비게이션 바로부터 여유 확보) */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 safe-top bg-slate-900/95 border-b border-slate-800 backdrop-blur">
+        <div className="flex items-center justify-between h-14 min-h-[48px] px-4">
           <div
             onClick={handleLogoClick}
             className="flex items-center gap-2 cursor-pointer touch-target"
@@ -229,7 +229,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </div>
 
-      {/* Mobile Menu: 풀스크린 오버레이 + 터치 친화 메뉴 */}
+      {/* Mobile Menu: 하단 시트 형태 (화면 절반 정도만 덮도록) */}
       {isMobileMenuOpen && (
         <>
           <div
@@ -237,8 +237,11 @@ export function MainLayout({ children }: MainLayoutProps) {
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden
           />
-          <div className="md:hidden fixed inset-0 top-14 z-50 flex flex-col bg-slate-900 safe-bottom">
-            <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+          <div className="md:hidden fixed inset-x-0 bottom-0 z-50 flex flex-col bg-slate-900 safe-bottom rounded-t-2xl shadow-2xl max-h-[70vh]">
+            <div className="flex items-center justify-center pt-3 pb-1">
+              <div className="h-1.5 w-12 rounded-full bg-slate-700" />
+            </div>
+            <nav className="flex-1 overflow-y-auto px-4 pb-4 pt-2 space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeMenuItem === item.id;
@@ -261,20 +264,20 @@ export function MainLayout({ children }: MainLayoutProps) {
                 );
               })}
             </nav>
-            <div className="flex-shrink-0 p-4 border-t border-slate-800 safe-bottom">
+            <div className="flex-shrink-0 p-4 border-t border-slate-800">
               <UserInfo />
             </div>
           </div>
         </>
       )}
 
-      {/* Main Content (모바일: 고정 헤더 높이만큼 상단 패딩) */}
+      {/* Main Content (모바일: 고정 헤더 + 하단 네비게이션 영역 여유) */}
       <main className={cn(
         "flex-1 overflow-hidden flex flex-col",
         "pt-14 md:pt-0", // 모바일 헤더 높이
         "md:ml-64"
       )}>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto safe-bottom pb-4">
           {children}
         </div>
       </main>

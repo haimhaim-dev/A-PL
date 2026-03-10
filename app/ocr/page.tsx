@@ -3,6 +3,9 @@
 import * as React from "react";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+// 동적 렌더링 강제 (Supabase 클라이언트 사용으로 인한 prerender 에러 방지)
+export const dynamic = 'force-dynamic';
 import { PDFOCRUploader } from "@/components/upload/pdf-ocr-uploader";
 import { LoginRequired } from "@/components/upload/login-required";
 import { Button } from "@/components/ui/button";

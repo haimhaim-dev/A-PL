@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { PaginationSchema } from "@/lib/api-validation";
+import { checkIPRateLimit, getClientIP, getRetryAfter } from "@/lib/rate-limiter";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,10 +12,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
     }
 
+    const ipLimit = checkIPRateLimit(getClientIP(request), { windowMs: 60000, maxRequests: 30 });
+    if (!ipLimit.allowed) {
+      return NextResponse.json(
+        { error: "요청이 너무 많습니다." },
+        { status: 429, headers: { "Retry-After": getRetryAfter(ipLimit.resetAt).toString() } }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type') || 'all'; // 'all', 'charge', 'usage'
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const type = searchParams.get("type") || "all";
+    const parseResult = PaginationSchema.safeParse({
+      page: searchParams.get("page") ?? "1",
+      limit: searchParams.get("limit") ?? "50",
+    });
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "잘못된 페이지네이션 파라미터입니다." }, { status: 400 });
+    }
+
+    const { page, limit } = parseResult.data;
     const offset = (page - 1) * limit;
 
     // 기본 쿼리 구성

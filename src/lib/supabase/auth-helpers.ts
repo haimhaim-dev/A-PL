@@ -1,18 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import type { User } from "@supabase/supabase-js";
 
-export interface UserPointsRow {
-  remaining_points: number;
-  total_points: number;
-  used_points: number;
-}
-
-export interface DeductPointsResult {
-  success: boolean;
-  remaining_points: number;
-  amount_deducted: number;
-}
-
 /**
  * API 라우트에서 현재 로그인한 사용자 조회 (쿠키 기반 세션)
  */
@@ -30,58 +18,40 @@ export async function getCurrentUser(): Promise<User | null> {
 }
 
 /**
- * 사용자 포인트 조회 (user_points 테이블)
+ * ✅ 안전한 크레딧 차감 및 로그 기록
+ * 
+ * 이 함수는 직접 호출하지 말고, API 라우트에서 supabase.rpc('log_and_deduct_credits')를 직접 호출하세요.
+ * 
+ * @example
+ * ```typescript
+ * const { data, error } = await supabase.rpc('log_and_deduct_credits', {
+ *   p_user_id: userId,
+ *   p_amount: -1, // 차감할 금액 (음수)
+ *   p_description: '퀴즈 생성 비용',
+ *   p_quiz_id: quizId,
+ *   p_type: 'usage'
+ * });
+ * ```
  */
-export async function getUserPoints(userId: string): Promise<UserPointsRow> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("user_points")
-    .select("remaining_points, total_points, used_points")
-    .eq("user_id", userId)
-    .single();
+export function getRecommendedCreditPattern() {
+  return `
+// ✅ 권장 패턴: 안전한 크레딧 차감
+const { data: creditResult, error: creditError } = await supabase.rpc('log_and_deduct_credits', {
+  p_user_id: userId,
+  p_amount: -requiredCredits, // 차감할 금액 (음수)
+  p_description: '서비스 이용 비용',
+  p_quiz_id: quizId || null,
+  p_type: 'usage'
+});
 
-  if (error || !data) {
-    if (error) console.error("[auth-helpers] getUserPoints error:", error.message);
-    return {
-      remaining_points: 0,
-      total_points: 0,
-      used_points: 0
-    };
+if (creditError) {
+  // 크레딧 부족 또는 기타 에러 처리
+  if (creditError.message.includes('INSUFFICIENT_CREDITS')) {
+    return { error: '크레딧이 부족합니다.' };
   }
-  return data as UserPointsRow;
+  return { error: '크레딧 처리 중 오류가 발생했습니다.' };
 }
 
-/**
- * 포인트 차감 (DB RPC deduct_points 호출 - 트랜잭션 보장)
- * @param reason 'pdf_ocr' | 'question_generation' | 'purchase' | 'refund' | 'admin_adjustment'
- */
-export async function deductPoints(
-  userId: string,
-  amount: number,
-  reason: string,
-  description: string,
-  metadata?: Record<string, unknown> | null
-): Promise<DeductPointsResult> {
-  const supabase = createClient();
-  const { data, error } = await supabase.rpc("deduct_points", {
-    p_user_id: userId,
-    p_amount: amount,
-    p_reason: reason,
-    p_description: description,
-    p_metadata: metadata ?? null
-  });
-
-  if (error) {
-    const msg = error.message || "포인트 차감 실패";
-    if (msg.includes("Insufficient points")) {
-      throw new Error("INSUFFICIENT_POINTS");
-    }
-    throw new Error(msg);
-  }
-
-  const result = data as DeductPointsResult | null;
-  if (!result || !result.success) {
-    throw new Error("포인트 차감에 실패했습니다.");
-  }
-  return result;
+// 성공 시 creditResult.remaining_credits 사용 가능
+`;
 }

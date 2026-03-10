@@ -2,6 +2,9 @@ import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// 동적 렌더링 강제 (Supabase 클라이언트 사용으로 인한 prerender 에러 방지)
+export const dynamic = 'force-dynamic';
+
 export default function AuthCodeError() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 px-5">

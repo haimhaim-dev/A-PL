@@ -3,6 +3,9 @@
 import * as React from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
+
+// 동적 렌더링 강제 (Supabase 클라이언트 사용으로 인한 prerender 에러 방지)
+export const dynamic = 'force-dynamic';
 import { Card } from "@/components/ui/card";
 import { LogoBadge } from "@/components/home/logo-badge";
 import { Loader2, Sparkles } from "lucide-react";

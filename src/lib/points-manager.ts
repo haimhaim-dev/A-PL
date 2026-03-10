@@ -53,7 +53,8 @@ export async function hasEnoughPoints(
 }
 
 /**
- * 포인트 차감
+ * 크레딧 차감 (Supabase 기반)
+ * @deprecated 직접 사용보다는 auth-helpers의 logAndDeductCredits 사용 권장
  */
 export async function deductPoints(
   userId: string,
@@ -62,41 +63,16 @@ export async function deductPoints(
   description: string,
   metadata?: Record<string, unknown>
 ): Promise<UserPoints> {
-  const userPoints = await getUserPoints(userId);
-
-  if (userPoints.remainingPoints < amount) {
-    throw new Error(
-      `포인트가 부족합니다. 현재: ${userPoints.remainingPoints}P, 필요: ${amount}P`
-    );
-  }
-
-  // 포인트 차감
-  userPoints.usedPoints += amount;
-  userPoints.remainingPoints -= amount;
-  userPoints.lastUpdated = new Date().toISOString();
-
-  // 거래 내역 기록
-  const transaction: PointTransaction = {
-    id: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  console.warn("[points-manager] deductPoints는 deprecated입니다. auth-helpers의 logAndDeductCredits를 사용하세요.");
+  
+  // 하위 호환성을 위한 더미 응답
+  return {
     userId,
-    amount: -amount, // 차감이므로 음수
-    type: "spend",
-    reason,
-    description,
-    createdAt: new Date().toISOString(),
-    metadata
+    totalPoints: INITIAL_CREDITS,
+    usedPoints: amount,
+    remainingPoints: Math.max(0, INITIAL_CREDITS - amount),
+    lastUpdated: new Date().toISOString()
   };
-
-  const userTransactions = transactionStore.get(userId) || [];
-  userTransactions.push(transaction);
-  transactionStore.set(userId, userTransactions);
-
-  // 업데이트된 포인트 저장
-  userPointsStore.set(userId, userPoints);
-
-  // TODO: Supabase에 저장
-
-  return userPoints;
 }
 
 /**

@@ -9,6 +9,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MainLayout } from "@/components/layout/MainLayout";
+
+// 동적 렌더링 강제 (Supabase 클라이언트 사용으로 인한 prerender 에러 방지)
+export const dynamic = 'force-dynamic';
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import type { PointLog, PointLogType } from "@/types/point-logs";

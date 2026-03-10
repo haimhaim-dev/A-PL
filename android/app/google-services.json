@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:999213389579:android:1b89865b314ab35a5eb40e",
+        "android_client_info": {
+          "package_name": "com.haimhaim.APL"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzhCXk7XmHoSdSH2IYDbFnOh2aWR2wItA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:999213389579:android:6ef387def87298e05eb40e",
         "android_client_info": {
           "package_name": "com.haimhaim.apl"

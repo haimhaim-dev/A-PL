@@ -320,6 +320,7 @@ CREATE POLICY "exporthistory_insert_own"
   - [ ] `avatar_url` vs `image_url` 중 하나로 통일 후 코드 반영
 
 - [ ] **RLS**  
+  - [ ] `supabase/migrations/20240206100000_rls_security_fixes.sql` 실행 (INSERT WITH CHECK 등 보안 강화)
   - [ ] 위 3.2 정책을 참고해 모든 테이블에 적용  
   - [ ] INSERT 정책에 **WITH CHECK (auth.uid() = user_id)** 반드시 넣기  
   - [ ] QuizAttempt 테이블 정책 추가(없을 경우)

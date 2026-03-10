@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
               id: data.user.id,
               email: data.user.email,
               name: userName,
-              image_url: userImageUrl,
+              avatar_url: userImageUrl,
             }, {
               onConflict: 'id'
             })

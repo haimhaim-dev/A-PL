@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getCurrentUser, getUserPoints, deductPoints } from "@/lib/supabase/auth-helpers";
-import { checkIPRateLimit, checkUserRateLimit, getClientIP, getRetryAfter, RATE_LIMITS } from "@/lib/rate-limiter";
+import { getCurrentUser } from "@/lib/supabase/auth-helpers";
+import { createClient } from "@/utils/supabase/server";
+import { checkIPRateLimit, getClientIP, getRetryAfter, RATE_LIMITS } from "@/lib/rate-limiter";
+import { GenerateQuizSchema } from "@/lib/api-validation";
 import type { GenerateQuizResponse, GenerateQuizError, MultipleChoiceQuestion } from "@/types/quiz";
 
 // Route Segment Config
@@ -42,31 +44,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. 포인트 확인
-    const userPoints = await getUserPoints(user.id);
+    // 3. 크레딧 사전 확인 (선택적 - UX 향상용)
+    const supabase = createClient();
+    const { data: userProfile } = await supabase
+      .from('users')
+      .select('credits')
+      .eq('id', user.id)
+      .single();
+    
     const requiredCredits = 1; // 문제 생성 1 크레딧
-
-    if (userPoints.remaining_points < requiredCredits) {
+    
+    if (userProfile && userProfile.credits < requiredCredits) {
       return NextResponse.json<GenerateQuizError>(
         {
           error: "크레딧이 부족합니다.",
           code: "INSUFFICIENT_CREDITS",
-          details: `필요: ${requiredCredits}, 보유: ${userPoints.remaining_points}`
+          details: `필요: ${requiredCredits}, 보유: ${userProfile.credits}`
         },
         { status: 402 }
       );
     }
 
-    // 4. 요청 데이터 파싱
+    // 4. 요청 데이터 파싱 및 검증 (Zod)
     const body = await request.json();
-    const { pdfText, questionCount = 5, difficulty = "medium" } = body;
+    const parseResult = GenerateQuizSchema.safeParse(body);
 
-    if (!pdfText || typeof pdfText !== "string") {
+    if (!parseResult.success) {
+      const firstError = parseResult.error.errors[0];
       return NextResponse.json<GenerateQuizError>(
-        { error: "PDF 텍스트가 필요합니다.", code: "INVALID_REQUEST" },
+        {
+          error: firstError?.message ?? "파라미터가 올바르지 않습니다.",
+          code: "INVALID_REQUEST",
+        },
         { status: 400 }
       );
     }
+
+    const { pdfText, questionCount, difficulty } = parseResult.data;
 
     // 텍스트 길이 제한 (너무 길면 자르기)
     const maxTextLength = 8000;
@@ -160,20 +174,7 @@ JSON만 출력하세요. 다른 텍스트는 포함하지 마세요.`;
       difficulty: difficulty
     }));
 
-    // 11. 포인트 차감
-    console.log("💰 [Credits] 차감 중...");
-    await deductPoints(
-      user.id,
-      requiredCredits,
-      "question_generation",
-      `AI 문제 ${questions.length}개 생성`,
-      { questionCount: questions.length, difficulty }
-    );
-
-    const remainingCredits = userPoints.remaining_points - requiredCredits;
-    console.log(`✅ [Credits] 차감 완료: ${userPoints.remaining_points} → ${remainingCredits}`);
-
-    // 12. 퀴즈 세트 생성
+    // 11. 퀴즈 세트 생성 (크레딧 차감 전에 ID 필요)
     const quizSet = {
       id: `quiz-${Date.now()}`,
       title: `AI 생성 문제 ${new Date().toLocaleDateString()}`,
@@ -181,6 +182,44 @@ JSON만 출력하세요. 다른 텍스트는 포함하지 마세요.`;
       totalQuestions: questions.length,
       createdAt: new Date()
     };
+
+    // 12. ✅ 안전한 크레딧 차감 (원자적 트랜잭션)
+    console.log("💰 [Credits] 차감 중...");
+    const { data: creditResult, error: creditError } = await supabase.rpc('log_and_deduct_credits', {
+      p_user_id: user.id,
+      p_amount: -requiredCredits, // 차감할 금액 (음수)
+      p_description: `AI 문제 ${questions.length}개 생성`,
+      p_quiz_id: quizSet.id,
+      p_type: 'usage'
+    });
+
+    if (creditError) {
+      console.error("❌ [Credits] 차감 실패:", creditError.message);
+      
+      // 크레딧 부족 에러 처리
+      if (creditError.message.includes('INSUFFICIENT_CREDITS') || 
+          creditError.message.includes('크레딧이 부족')) {
+        return NextResponse.json<GenerateQuizError>(
+          {
+            error: "크레딧이 부족합니다.",
+            code: "INSUFFICIENT_CREDITS"
+          },
+          { status: 402 }
+        );
+      }
+      
+      // 기타 에러
+      return NextResponse.json<GenerateQuizError>(
+        {
+          error: "크레딧 처리 중 오류가 발생했습니다.",
+          code: "CREDIT_ERROR"
+        },
+        { status: 500 }
+      );
+    }
+
+    const remainingCredits = creditResult?.remaining_credits || 0;
+    console.log(`✅ [Credits] 차감 완료: ${requiredCredits} 차감, 잔여: ${remainingCredits}`);
 
     // 13. 응답
     return NextResponse.json<GenerateQuizResponse>({
