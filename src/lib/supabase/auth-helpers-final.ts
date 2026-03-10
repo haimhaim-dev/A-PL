@@ -15,7 +15,7 @@ export interface CreditDeductionResult {
 /**
  * API 라우트에서 현재 로그인한 사용자 조회
  */
-export async function getCurrentUser(): Promise<User | null> {
+export async function getCurrentUser(): Promise<{ user: User | null; error: any }> {
   const supabase = createClient();
   const {
     data: { user },
@@ -24,10 +24,10 @@ export async function getCurrentUser(): Promise<User | null> {
   
   if (error) {
     console.error("[auth-helpers] getCurrentUser error:", error.message);
-    return null;
+    return { user: null, error };
   }
   
-  return user;
+  return { user, error: null };
 }
 
 /**
