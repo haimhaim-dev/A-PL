@@ -18,8 +18,8 @@ export const dynamic = 'force-dynamic';
 
 export default function AccountDeletePage() {
   const router = useRouter();
-  const { user, logout } = useAuth();
-  const { toast } = useToast();
+  const { user, signOut } = useAuth();
+  const { showError, showSuccess } = useToast();
   
   const [confirmText, setConfirmText] = useState("");
   const [agreedToDelete, setAgreedToDelete] = useState(false);
@@ -61,11 +61,10 @@ export default function AccountDeletePage() {
 
   const handleDeleteAccount = async () => {
     if (!agreedToDelete || confirmText !== CONFIRM_TEXT) {
-      toast({
-        title: "확인 필요",
-        description: "모든 조건에 동의하고 확인 문구를 정확히 입력해주세요.",
-        variant: "destructive"
-      });
+      showError(
+        "확인 필요",
+        "모든 조건에 동의하고 확인 문구를 정확히 입력해주세요."
+      );
       return;
     }
 
@@ -89,22 +88,21 @@ export default function AccountDeletePage() {
 
       const result = await response.json();
 
-      toast({
-        title: "계정 삭제 완료",
-        description: "계정과 모든 데이터가 성공적으로 삭제되었습니다.",
-      });
+      showSuccess(
+        "계정 삭제 완료",
+        "계정과 모든 데이터가 성공적으로 삭제되었습니다."
+      );
 
       // 로그아웃 후 홈페이지로 이동
-      await logout();
+      await signOut();
       router.push("/");
       
     } catch (error) {
       console.error("계정 삭제 오류:", error);
-      toast({
-        title: "삭제 실패",
-        description: "계정 삭제 중 오류가 발생했습니다. 다시 시도해주세요.",
-        variant: "destructive"
-      });
+      showError(
+        "삭제 실패",
+        "계정 삭제 중 오류가 발생했습니다. 다시 시도해주세요."
+      );
     } finally {
       setIsDeleting(false);
       setShowFinalConfirm(false);
