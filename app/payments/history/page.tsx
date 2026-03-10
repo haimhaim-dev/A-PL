@@ -141,40 +141,40 @@ export default function PointHistoryPage() {
             </div>
           </div>
 
-          {/* 상단 요약 섹션 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* 상단 요약 섹션 - 모바일에서 세로 배치 */}
+          <div className="space-y-4 sm:grid sm:grid-cols-1 md:grid-cols-3 sm:gap-4 md:gap-6 sm:space-y-0 mb-6 sm:mb-8">
             {/* 현재 보유 포인트 */}
-            <Card className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 border-orange-500/30">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-orange-400">
-                  <Coins className="w-5 h-5" />
+            <Card className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 border-orange-500/30 rounded-2xl">
+              <CardHeader className="p-4 pb-2">
+                <CardTitle className="flex items-center gap-2 text-orange-400 text-sm sm:text-base">
+                  <Coins className="w-4 h-4 sm:w-5 sm:h-5" />
                   현재 보유 포인트
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 {isCreditsLoaded ? (
-                  <div className="text-3xl font-bold text-orange-300">
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-300">
                     {credits.toLocaleString()}P
                   </div>
                 ) : (
-                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-8 sm:h-10 w-20 sm:w-24" />
                 )}
               </CardContent>
             </Card>
 
             {/* 총 충전 금액 */}
-            <Card className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border-blue-500/30">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-blue-400">
-                  <TrendingUp className="w-5 h-5" />
+            <Card className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border-blue-500/30 rounded-2xl">
+              <CardHeader className="p-4 pb-2">
+                <CardTitle className="flex items-center gap-2 text-blue-400 text-sm sm:text-base">
+                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   총 충전 금액
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 {isPointLogsLoading ? (
-                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-8 sm:h-10 w-20 sm:w-24" />
                 ) : (
-                  <div className="text-3xl font-bold text-blue-300">
+                  <div className="text-2xl sm:text-3xl font-bold text-blue-300">
                     +{totalChargeAmount.toLocaleString()}P
                   </div>
                 )}
@@ -182,18 +182,18 @@ export default function PointHistoryPage() {
             </Card>
 
             {/* 총 사용 금액 */}
-            <Card className="bg-gradient-to-br from-red-500/20 to-pink-500/20 border-red-500/30">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-red-400">
-                  <TrendingDown className="w-5 h-5" />
+            <Card className="bg-gradient-to-br from-red-500/20 to-pink-500/20 border-red-500/30 rounded-2xl">
+              <CardHeader className="p-4 pb-2">
+                <CardTitle className="flex items-center gap-2 text-red-400 text-sm sm:text-base">
+                  <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
                   총 사용 금액
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-4 pt-0">
                 {isPointLogsLoading ? (
-                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-8 sm:h-10 w-20 sm:w-24" />
                 ) : (
-                  <div className="text-3xl font-bold text-red-300">
+                  <div className="text-2xl sm:text-3xl font-bold text-red-300">
                     -{totalUsageAmount.toLocaleString()}P
                   </div>
                 )}
@@ -202,14 +202,14 @@ export default function PointHistoryPage() {
           </div>
 
           {/* 필터 탭 및 내역 리스트 */}
-          <Card className="bg-slate-900/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-slate-200">
+          <Card className="bg-slate-900/50 border-slate-700 rounded-2xl">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="flex items-center gap-2 text-slate-200 text-lg sm:text-xl">
                 <CreditCard className="w-5 h-5" />
                 포인트 변동 내역
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6 pt-0">
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="grid w-full grid-cols-3 bg-slate-800 border-slate-600">
                   <TabsTrigger value="all" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">

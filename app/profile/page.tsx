@@ -102,39 +102,36 @@ export default function ProfilePage() {
     <MainLayout>
       <div className="min-h-screen bg-background text-foreground">
         <div className="container mx-auto max-w-7xl mobile-page py-6">
-          {/* 메인 그리드 레이아웃 */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* 왼쪽 컬럼 */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* 프로필 카드 */}
+          {/* 모바일 우선 레이아웃 */}
+          <div className="space-y-6 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
+            
+            {/* 프로필 및 크레딧 섹션 (모바일에서 상단) */}
+            <div className="space-y-4 lg:space-y-6 lg:col-span-1">
               <ProfileCard 
                 user={user}
                 totalQuizzes={userQuizzes.length}
               />
-
-              {/* 크레딧 섹션 */}
               <CreditSection 
                 currentCredits={credits}
               />
             </div>
 
-            {/* 오른쪽 컬럼 */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* 학습 통계 카드들 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 통계 및 설정 섹션 (모바일에서 하단) */}
+            <div className="space-y-4 lg:space-y-6 lg:col-span-2">
+              {/* 학습 성취도와 최근 활동 - 모바일에서 세로 배치 */}
+              <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
                 <LearningAchievementCard 
                   achievementPercentage={LEARNING_ACHIEVEMENT_PERCENTAGE}
                   totalQuestions={TOTAL_QUESTIONS_SOLVED}
-                  streak={12} // 더미 데이터
+                  streak={12}
                 />
-                
                 <RecentActivityCard 
                   recentQuizzes={userQuizzes.slice(0, 3)}
                   userQuizAttempts={userQuizAttempts}
                 />
               </div>
 
-              {/* 주간 학습 리포트 */}
+              {/* 주간 학습 차트 */}
               <WeeklyLearningChart 
                 weeklyData={WEEKLY_LEARNING_DATA}
               />

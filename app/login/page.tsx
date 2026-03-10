@@ -58,16 +58,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 px-5 py-10">
-      <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 mobile-page py-8 sm:py-10">
+      <div className="w-full max-w-md space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* 로고 */}
         <div className="flex justify-center">
           <LogoBadge />
         </div>
 
         {/* 타이틀 */}
-        <div className="space-y-3 text-center">
-          <h1 className="text-3xl font-bold text-white">로그인</h1>
+        <div className="space-y-2 sm:space-y-3 text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">로그인</h1>
           <p className="text-sm leading-relaxed text-slate-400">
             에이쁠과 함께 시험 준비를 시작하세요
             <br />
@@ -76,13 +76,13 @@ export default function LoginPage() {
         </div>
 
         {/* 로그인 카드 */}
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6 rounded-2xl">
           <div className="space-y-4">
             <Button
               onClick={handleGoogleLogin}
               disabled={isLoading}
               size="lg"
-              className="group relative w-full gap-3 overflow-hidden text-base"
+              className="group relative w-full gap-3 overflow-hidden text-base h-12 sm:h-14 touch-target"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="relative flex items-center gap-3">
@@ -143,51 +143,51 @@ export default function LoginPage() {
         </Card>
 
         {/* 첫 로그인 혜택 안내 */}
-        <div className="relative overflow-hidden rounded-xl border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/5 p-5">
-          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-yellow-500/10 blur-2xl" />
+        <div className="relative overflow-hidden rounded-2xl border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/5 p-4 sm:p-5">
+          <div className="absolute -right-6 -top-6 h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-yellow-500/10 blur-2xl" />
           <div className="relative flex items-center justify-center gap-2 text-center">
-            <Sparkles className="h-5 w-5 shrink-0 text-yellow-400" />
-            <p className="text-base font-bold text-white">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-yellow-400" />
+            <p className="text-sm sm:text-base font-bold text-white">
               첫 로그인 시 5회 생성 무료!
             </p>
           </div>
         </div>
 
         {/* 서비스 소개 */}
-        <div className="space-y-3">
-          <div className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/5 p-3">
+        <div className="space-y-2 sm:space-y-3">
+          <div className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/5 p-3 sm:p-4">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
               <span className="text-sm">📄</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-slate-200">
                 강의자료 업로드
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 leading-relaxed">
                 PDF 파일을 업로드하면 AI가 자동 분석
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/5 p-3">
+          <div className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/5 p-3 sm:p-4">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
               <span className="text-sm">🤖</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-slate-200">AI 문제 생성</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 leading-relaxed">
                 핵심 개념을 문제로 자동 변환
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/5 p-3">
+          <div className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/5 p-3 sm:p-4">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
               <span className="text-sm">✍️</span>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-medium text-slate-200">시험 대비</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 leading-relaxed">
                 객관식·서술형 문제로 완벽 준비
               </p>
             </div>

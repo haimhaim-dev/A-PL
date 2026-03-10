@@ -111,94 +111,94 @@ export default function LibraryPage() {
 
   return (
     <MainLayout>
-      <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
-      {/* 헤더 섹션 */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
-            <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-              라이브러리
-            </h1>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-sm sm:text-lg text-slate-300 truncate">
-                총 <span className="font-bold text-emerald-400">{totalQuizCount}</span>개의 문제집이 소장 중입니다
-              </span>
+      <div className="min-h-screen bg-background text-foreground">
+        <div className="container mx-auto max-w-6xl mobile-page py-6 sm:py-8">
+          {/* 모바일 최적화 헤더 */}
+          <div className="space-y-4 mb-6">
+            {/* 상단: 제목과 통계 */}
+            <div className="text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-3 mb-2">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg shrink-0">
+                  <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                </div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+                  라이브러리
+                </h1>
+              </div>
+              <p className="text-sm sm:text-base text-slate-300">
+                총 <span className="font-bold text-emerald-400">{totalQuizCount}</span>개의 문제집
+              </p>
             </div>
-          </div>
-        </div>
-        
-        {/* 버튼 그룹 */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <Button
-            onClick={() => router.push("/library/export-history")}
-            variant="outline"
-            className="flex items-center gap-2 bg-white/5 border-white/20 hover:bg-white/10 text-white hover:text-white transition-all duration-200"
-          >
-            <History className="h-4 w-4" />
-            내보내기 기록
-          </Button>
-          <Button
-            onClick={() => router.push("/")}
-            variant="outline"
-            className="flex items-center gap-2 bg-white/5 border-white/20 hover:bg-white/10 text-white hover:text-white transition-all duration-200"
-          >
-            <Home className="h-4 w-4" />
-            홈으로
-          </Button>
-        </div>
-      </div>
-
-      {/* 검색 바 */}
-      <div className="mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            placeholder="문제집 제목으로 검색..."
-            value={searchTerm}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-slate-400"
-          />
-        </div>
-      </div>
-
-      {filteredAllQuizzes.length === 0 ? (
-        <Card className="w-full text-center py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
-              <BookOpen className="h-8 w-8 text-white" />
+            
+            {/* 검색 바 */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="문제집 제목으로 검색..."
+                value={searchTerm}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12 bg-white/5 border-white/20 text-white placeholder:text-slate-400 rounded-xl"
+              />
             </div>
-            <CardTitle className="mb-2 text-xl">
-              {searchTerm ? "검색 결과가 없습니다" : "아직 생성된 퀴즈가 없습니다"}
-            </CardTitle>
-            <CardDescription className="mb-6 text-slate-300">
-              {searchTerm ? "다른 키워드로 검색해보세요" : "첫 번째 PDF를 업로드하여 학습을 시작해 보세요!"}
-            </CardDescription>
-            {!searchTerm && (
-              <Button 
-                onClick={() => router.push("/")}
-                className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg transition-all duration-200"
+            
+            {/* 액션 버튼들 - 모바일에서 풀 너비 */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              <Button
+                onClick={() => router.push("/library/export-history")}
+                variant="outline"
+                className="flex items-center justify-center gap-2 h-12 bg-white/5 border-white/20 hover:bg-white/10 text-white hover:text-white transition-all duration-200 touch-target"
               >
-                퀴즈 만들러 가기
+                <History className="h-4 w-4" />
+                내보내기 기록
               </Button>
-            )}
+              <Button
+                onClick={() => router.push("/")}
+                variant="outline"
+                className="flex items-center justify-center gap-2 h-12 bg-white/5 border-white/20 hover:bg-white/10 text-white hover:text-white transition-all duration-200 touch-target"
+              >
+                <Home className="h-4 w-4" />
+                홈으로
+              </Button>
+            </div>
           </div>
-        </Card>
-      ) : (
-        <QuizHistory
-          quizHistory={filteredAllQuizzes}
-          displayMode="full"
-          onQuizSelect={(quizId: string) => {
-            router.push(`/quiz/${quizId}`);
-          }}
-          onExportClick={handleExport}
-          supabaseClient={supabase}
-          userId={user.id}
-        />
-      )}
-    </div>
+
+          {/* 콘텐츠 영역 */}
+          {filteredAllQuizzes.length === 0 ? (
+            <Card className="w-full text-center py-8 sm:py-12 bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30 rounded-2xl">
+              <div className="flex flex-col items-center gap-4 px-4">
+                <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
+                  <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                </div>
+                <CardTitle className="text-lg sm:text-xl">
+                  {searchTerm ? "검색 결과가 없습니다" : "아직 생성된 퀴즈가 없습니다"}
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base text-slate-300 max-w-md">
+                  {searchTerm ? "다른 키워드로 검색해보세요" : "첫 번째 PDF를 업로드하여 학습을 시작해 보세요!"}
+                </CardDescription>
+                {!searchTerm && (
+                  <Button 
+                    onClick={() => router.push("/")}
+                    className="mt-2 bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-200 touch-target"
+                  >
+                    퀴즈 만들러 가기
+                  </Button>
+                )}
+              </div>
+            </Card>
+          ) : (
+            <QuizHistory
+              quizHistory={filteredAllQuizzes}
+              displayMode="full"
+              onQuizSelect={(quizId: string) => {
+                router.push(`/quiz/${quizId}`);
+              }}
+              onExportClick={handleExport}
+              supabaseClient={supabase}
+              userId={user.id}
+            />
+          )}
+        </div>
+      </div>
     </MainLayout>
   );
 }
