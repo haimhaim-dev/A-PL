@@ -96,6 +96,16 @@ export default function ProfilePage() {
               </Button>
             </CardContent>
           </Card>
+
+          {/* 개인정보처리방침 링크 - 로그인 페이지 하단 */}
+          <div className="mt-8 text-center">
+            <a 
+              href="/privacy"
+              className="text-xs text-slate-500 hover:text-slate-400 transition-colors duration-200"
+            >
+              개인정보처리방침
+            </a>
+          </div>
         </div>
       </MainLayout>
     );
@@ -141,6 +151,18 @@ export default function ProfilePage() {
 
               {/* 계정 설정 */}
               <AccountSettingsSection />
+            </div>
+          </div>
+
+          {/* 개인정보처리방침 링크 - 페이지 하단 */}
+          <div className="mt-12 pt-8 border-t border-slate-800/50">
+            <div className="text-center">
+              <a 
+                href="/privacy"
+                className="text-xs text-slate-500 hover:text-slate-400 transition-colors duration-200"
+              >
+                개인정보처리방침
+              </a>
             </div>
           </div>
         </div>

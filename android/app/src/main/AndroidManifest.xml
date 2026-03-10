@@ -51,6 +51,11 @@
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
+            
+        <!-- 개인정보 처리방침 URL -->
+        <meta-data
+            android:name="privacy_policy_url"
+            android:value="https://a-pl.vercel.app/privacy" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

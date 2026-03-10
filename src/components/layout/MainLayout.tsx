@@ -266,6 +266,15 @@ export function MainLayout({ children }: MainLayoutProps) {
             </nav>
             <div className="flex-shrink-0 p-4 border-t border-slate-800">
               <UserInfo />
+              {/* 개인정보처리방침 링크 */}
+              <div className="mt-3 pt-3 border-t border-slate-800/50 text-center">
+                <a 
+                  href="/privacy"
+                  className="text-xs text-slate-500 hover:text-slate-400 transition-colors duration-200"
+                >
+                  개인정보처리방침
+                </a>
+              </div>
             </div>
           </div>
         </>

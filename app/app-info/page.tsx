@@ -47,8 +47,39 @@ export default function AppInfoPage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-slate-300">
               <p><strong className="text-slate-200">앱 이름</strong> 에이쁠 (A-Pl)</p>
-              <p><strong className="text-slate-200">버전</strong> 0.1.0</p>
+              <p><strong className="text-slate-200">버전</strong> 1.2.0</p>
               <p><strong className="text-slate-200">설명</strong> 대학생을 위한 AI 시험 문제 생성 서비스. 강의 PDF를 업로드하면 AI가 자동으로 문제를 생성합니다.</p>
+            </CardContent>
+          </Card>
+
+          {/* 개인정보 처리방침 및 약관 */}
+          <Card className="mb-6 bg-slate-900/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-slate-200">
+                <FileText className="h-5 w-5" />
+                약관 및 정책
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={() => router.push('/privacy')}
+                  variant="outline"
+                  className="justify-start h-auto p-4 bg-slate-800/50 border-slate-600 hover:bg-slate-700/50"
+                >
+                  <div className="text-left">
+                    <div className="font-medium text-slate-200">개인정보 처리방침</div>
+                    <div className="text-sm text-slate-400 mt-1">
+                      개인정보 수집, 이용, 보관에 관한 정책을 확인하세요
+                    </div>
+                  </div>
+                </Button>
+                
+                <div className="text-xs text-slate-500 mt-2">
+                  <p>개인정보 처리방침 URL: <span className="text-blue-400">https://a-pl.vercel.app/privacy</span></p>
+                  <p>구글 플레이 콘솔에서 위 URL을 개인정보 처리방침으로 등록해주세요.</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
