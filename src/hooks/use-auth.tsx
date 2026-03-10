@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log('🔍 [Auth] 세션 상세:', {
               userId: session.user.id,
               email: session.user.email,
-              expiresAt: new Date(session.expires_at * 1000).toLocaleString(),
+              expiresAt: new Date(session.expires_at ?? 0 * 1000).toLocaleString(),
               hasRefreshToken: !!session.refresh_token
             })
           }

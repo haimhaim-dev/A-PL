@@ -68,9 +68,9 @@ export async function deductPoints(
   // 하위 호환성을 위한 더미 응답
   return {
     userId,
-    totalPoints: INITIAL_CREDITS,
+    totalPoints: 5,
     usedPoints: amount,
-    remainingPoints: Math.max(0, INITIAL_CREDITS - amount),
+    remainingPoints: Math.max(0, 5 - amount),
     lastUpdated: new Date().toISOString()
   };
 }

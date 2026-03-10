@@ -9,7 +9,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth"; // useAuth import 추가
-import { getSupabaseClient } from "@/lib/supabase/singleton";
+import { createClient } from "@/utils/supabase/client";
 import { processPDFBuffer, intelligentSummary } from "@/lib/pdf-processing";
 import { calculateChunkScore, recommendDocumentType, generateSystemInstruction, generateAdaptationContext, generateSelfCorrectionPrompt, generateBridgeQuestionStrategy } from "@/lib/document-processor";
 import type { ProcessAPIResponse, AIAnalysisResult } from "@/types/process-api";
@@ -71,7 +71,7 @@ export function useQuizGeneration() {
       console.log('📡 REAL_RESPONSE:', result);
 
       // AI 응답의 구조가 변경되었을 가능성을 대비하여 방어적으로 접근
-      const analysisResult = result.analysisResult || result.data?.analysisResult || result; // 유연하게 데이터 접근
+      const analysisResult = result.analysisResult || (result as any).data?.analysisResult || result; // 유연하게 데이터 접근
 
       if (analysisResult) { // refinedText가 비어있어도 analysisResult 객체 자체는 존재해야 함
         setAiAnalysisResult(analysisResult);

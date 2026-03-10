@@ -106,7 +106,7 @@ export function QuizHistory({ quizHistory, displayMode, onQuizSelect, onExportCl
           displayMode === "full" ? "mb-3" : ""
         );
 
-        const presetInfo = getPresetInfo(quiz.document_preset, quiz.content);
+        const presetInfo = getPresetInfo((quiz as any).document_preset || null, quiz.content);
         
         return (
           <Card key={quiz.id} className={cardCombinedClasses}>

@@ -3,7 +3,16 @@
  * STEM 분야 강의자료, 교재, 시험지 특성에 맞춘 청크 분류 로직
  */
 
-import type { DocumentType, ChunkClassification, ChunkAnalysis } from "@/types/process-api";
+// import type { DocumentType, ChunkClassification, ChunkAnalysis } from "@/types/process-api";
+
+// 임시 타입 정의 (필요시 process-api.ts로 이동)
+type DocumentType = "LECTURE" | "TEXTBOOK" | "EXAM" | "AUTO";
+type ChunkClassification = "heading" | "content" | "example" | "formula" | "table" | "DISCARD" | "KEEP" | "SUMMARY";
+type ChunkAnalysis = {
+  type: ChunkClassification;
+  importance: number;
+  content: string;
+};
 
 export interface ProcessorWeights {
   heading: number;
@@ -41,6 +50,14 @@ export const DOCUMENT_PRESETS: Record<DocumentType, ProcessorWeights> = {
     table: 0.2,
     example: 0.15,
     keepThreshold: 0.6,
+  },
+  AUTO: {
+    heading: 0.3,
+    definition: 0.25,
+    math: 0.2,
+    table: 0.15,
+    example: 0.1,
+    keepThreshold: 0.7,
   },
 };
 

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { ToastType } from "@/components/ui/toast";
+import { ToastContainer } from "@/components/ui/toast";
 
 interface ToastData {
   id: string;
@@ -68,6 +69,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       value={{ toasts, showToast, showSuccess, showError, showWarning, showInfo, removeToast }}
     >
       {children}
+      <ToastContainer toasts={toasts} onClose={removeToast} />
     </ToastContext.Provider>
   );
 }
