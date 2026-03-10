@@ -12,8 +12,7 @@ import {
   getRetryAfter,
   RATE_LIMITS
 } from "@/lib/rate-limiter";
-import { getCurrentUser } from "@/lib/supabase/auth-helpers";
-import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser, checkUserCredits, deductCreditsRPC } from "@/lib/supabase/auth-helpers-v2";
 import type { OCRResult, OCRError, OCRCostEstimate } from "@/types/ocr";
 
 // Route Segment Config (Next.js 14 App Router)
@@ -162,21 +161,16 @@ export async function POST(request: NextRequest) {
     const pageCount = clientImages.length;
     const requiredPoints = calculateOCRCost(pageCount);
 
-    // 8. 크레딧 사전 확인 (선택적 - UX 향상용)
-    const supabase = createClient();
-    const { data: userProfile } = await supabase
-      .from('users')
-      .select('credits')
-      .eq('id', userId)
-      .single();
+    // 8. 크레딧 사전 확인
+    const creditCheck = await checkUserCredits(userId, requiredPoints);
     
-    if (userProfile && userProfile.credits < requiredPoints) {
+    if (!creditCheck.hasEnough) {
       return NextResponse.json<OCRError>(
         {
-          error: `크레딧이 부족합니다. 현재 ${userProfile.credits}P, 필요 ${requiredPoints}P`,
+          error: `크레딧이 부족합니다. 현재 ${creditCheck.currentCredits}P, 필요 ${requiredPoints}P`,
           code: "INSUFFICIENT_POINTS",
           requiredPoints,
-          currentPoints: userProfile.credits
+          currentPoints: creditCheck.currentCredits
         },
         { status: 402 }
       );
@@ -209,20 +203,18 @@ export async function POST(request: NextRequest) {
 
     // 15. ✅ 안전한 크레딧 차감 (원자적 트랜잭션)
     console.log("💰 [Credits] OCR 크레딧 차감 중...");
-    const { data: creditResult, error: creditError } = await supabase.rpc('log_and_deduct_credits', {
-      p_user_id: userId,
-      p_amount: -requiredPoints, // 차감할 금액 (음수)
-      p_description: `PDF OCR 처리 (${pageCount}페이지)`,
-      p_quiz_id: null, // OCR은 퀴즈와 무관
-      p_type: 'usage'
-    });
-
-    if (creditError) {
-      console.error("❌ [Credits] OCR 차감 실패:", creditError.message);
+    let creditResult;
+    try {
+      creditResult = await deductCreditsRPC(
+        userId,
+        requiredPoints,
+        `PDF OCR 처리 (${pageCount}페이지)`,
+        null
+      );
+    } catch (error) {
+      console.error("❌ [Credits] OCR 차감 실패:", error);
       
-      // 크레딧 부족 에러 처리
-      if (creditError.message.includes('INSUFFICIENT_CREDITS') || 
-          creditError.message.includes('크레딧이 부족')) {
+      if (error instanceof Error && error.message === "INSUFFICIENT_CREDITS") {
         return NextResponse.json<OCRError>(
           {
             error: "크레딧이 부족합니다.",
@@ -232,7 +224,6 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      // 기타 에러
       return NextResponse.json<OCRError>(
         {
           error: "크레딧 처리 중 오류가 발생했습니다.",
@@ -250,7 +241,7 @@ export async function POST(request: NextRequest) {
           totalPages: ocrResults.length,
           totalTokensUsed,
           pointsUsed: requiredPoints,
-          remainingPoints: creditResult?.remaining_credits || 0,
+          remainingPoints: creditResult.remaining_credits,
           averageProcessingTime:
             ocrResults.reduce((sum, r) => sum + r.processingTime, 0) /
             ocrResults.length
