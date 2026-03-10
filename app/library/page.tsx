@@ -188,7 +188,7 @@ export default function LibraryPage() {
                 )}
               </div>
             </Card>
-          ) : (
+          ) : user ? (
             <QuizHistory
               quizHistory={filteredAllQuizzes}
               displayMode="full"
@@ -199,7 +199,7 @@ export default function LibraryPage() {
               supabaseClient={supabase}
               userId={user.id}
             />
-          )}
+          ) : null}
         </div>
       </div>
     </MainLayout>
