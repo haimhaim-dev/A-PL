@@ -27,7 +27,7 @@ export async function DELETE(request: NextRequest) {
     const { error: attemptError } = await supabase
       .from('QuizAttempt')
       .delete()
-      .eq('user_id', userId);
+      .eq('userId', userId);
 
     if (attemptError) {
       console.error('퀴즈 시도 기록 삭제 실패:', attemptError);
@@ -69,7 +69,7 @@ export async function DELETE(request: NextRequest) {
     const { error: quizError } = await supabase
       .from('Quiz')
       .delete()
-      .eq('user_id', userId);
+      .eq('userId', userId);
 
     if (quizError) {
       console.error('퀴즈 삭제 실패:', quizError);
@@ -147,8 +147,8 @@ export async function GET(request: NextRequest) {
 
     // 삭제될 데이터 개수 조회
     const [quizCount, attemptCount, exportCount, pointLogCount] = await Promise.all([
-      supabase.from('Quiz').select('id', { count: 'exact' }).eq('user_id', userId),
-      supabase.from('QuizAttempt').select('id', { count: 'exact' }).eq('user_id', userId),
+      supabase.from('Quiz').select('id', { count: 'exact' }).eq('userId', userId),
+      supabase.from('QuizAttempt').select('id', { count: 'exact' }).eq('userId', userId),
       supabase.from('exporthistory').select('id', { count: 'exact' }).eq('user_id', userId),
       supabase.from('point_logs').select('id', { count: 'exact' }).eq('user_id', userId)
     ]);
